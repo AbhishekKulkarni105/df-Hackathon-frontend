@@ -41,13 +41,6 @@ const Viewproducts: React.FC = () => (
       </div>
     </Card>
   </>
-  //   <Card style={{ width: 300 }}>
-  //     <div>
-  //       <p>Category</p>
-  //       <Search placeholder="input search text" style={{ width: 200 }} />
-  //       <Button>ADD CATEGORY</Button>
-  //     </div>
-  //   </Card>
 );
 
 export default Viewproducts;
