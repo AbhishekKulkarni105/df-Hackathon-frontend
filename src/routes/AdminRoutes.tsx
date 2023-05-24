@@ -9,7 +9,6 @@ import Login from "../components/login/Login";
 export default function AdminRoutes() {
   return (
     <Routes>
-      <Route path="/login" element={<Login />} />
       <Route path="/" element={<Dashboardhome />} />
       <Route path="/category" element={<Viewcategory />} />
       <Route path="/products" element={<Viewproducts />} />

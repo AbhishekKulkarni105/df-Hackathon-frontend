@@ -2,14 +2,17 @@ import { Dispatch } from "redux";
 import axios from "axios";
 
 // login action
-const login = (username: string, password: string) => {
+const login = (email: string, password: string) => {
   return async (dispatch: Dispatch) => {
     try {
       // API call
-      const response = await axios.post("/api/login", { username, password });
+      const response = await axios.post(
+        "http://localhost:8081/api/auth/login",
+        { email, password }
+      );
 
       // Store the access token in local storage
-      localStorage.setItem("accessToken", response.data.accessToken);
+      localStorage.setItem("accessToken", response.data.access_token);
 
       // Dispatch action to store authenticated user data in Redux store
       dispatch({ type: "LOGIN_SUCCESS", payload: response.data.user });

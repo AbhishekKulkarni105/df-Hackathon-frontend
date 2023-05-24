@@ -10,27 +10,31 @@ import "react-toastify/dist/ReactToastify.min.css";
 import { useNavigate } from "react-router-dom";
 import { login } from "../../redux/action/auth";
 import { useForm } from "react-hook-form";
+import PropTypes from "prop-types";
 
-const Login: React.FC = () => {
+async function loginUser(credentials: any) {
+  return fetch("http://localhost:8081/api/auth/login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(credentials),
+  }).then((data) => data.json());
+}
+
+export default function Login() {
   const dispatch = useDispatch();
-  let navigate = useNavigate();
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const home = (data: any) => {
-    dispatch(login(username, password));
-    console.log(data);
-    navigate("/");
-  };
-  // const {
-  //   register,
-  //   handleSubmit,
-  //   formState: { errors },
-  // } = useForm();
+  // const home = (data: any) => {
+  //   dispatch(login(email, password));
+  //   console.log(data);
+  // };
 
   const logind = (data: any) => {
     let params = {
-      username: data.username,
+      email: data.email,
       password: data.password,
     };
     axios
@@ -59,9 +63,10 @@ const Login: React.FC = () => {
             progress: 0,
             toastId: "my_toast",
           });
-          localStorage.setItem("auth", response.data.token);
+          localStorage.setItem("auth", response.data.access_token);
+          console.log(response.data);
           setTimeout(() => {
-            navigate("/products");
+            window.location.reload();
           }, 3000);
         }
       })
@@ -69,53 +74,6 @@ const Login: React.FC = () => {
       .catch(function(error) {
         console.log(error);
       });
-  };
-
-  const [loggedIn, setLoggedIn] = useState(false);
-
-  useEffect(() => {
-    // Check if user is already logged in
-    const isLoggedIn = checkLoggedIn();
-    setLoggedIn(isLoggedIn);
-  }, []);
-
-  const checkLoggedIn = () => {
-    // Implement your logic to check if user is already logged in
-    // For example, you can check if there's a stored token in local storage
-    const token = localStorage.getItem("token");
-    return !!token;
-  };
-
-  const handleLogin = async () => {
-    try {
-      // Make a POST request to your authentication API endpoint
-      const response = await fetch("http://localhost:8081/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ username, password }),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        // Save the authentication token in local storage
-        localStorage.setItem("token", data.token);
-        console.log(data.token);
-        setLoggedIn(true);
-      } else {
-        // Handle login error
-        console.error("Login failed");
-      }
-    } catch (error) {
-      console.error("Error during login:", error);
-    }
-  };
-
-  const handleLogout = () => {
-    // Clear the authentication token from local storage
-    localStorage.removeItem("token");
-    setLoggedIn(false);
   };
 
   return (
@@ -127,19 +85,19 @@ const Login: React.FC = () => {
         <Form
           name="login-form"
           initialValues={{ remember: true }}
-          onFinish={home}
-          //   onFinishFailed={onFinishFailed}
+          onFinish={logind}
         >
           <img src={logo} />
           <p>Welcome to Digitalflake Admin</p>
           <Form.Item
-            name="username"
+            name="email"
             rules={[{ required: true, message: "Please input your username!" }]}
           >
             <Input
               placeholder="Username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+
               // {...register("username", { required: "Email is required!" })}
             />
           </Form.Item>
@@ -152,9 +110,6 @@ const Login: React.FC = () => {
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              // {...register("password", {
-              //   required: "Password is required!",
-              // })}
             />
           </Form.Item>
 
@@ -177,6 +132,4 @@ const Login: React.FC = () => {
       </div>
     </div>
   );
-};
-
-export default Login;
+}

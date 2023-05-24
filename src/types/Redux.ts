@@ -7,6 +7,6 @@ export type UserSessionType = {
   store: Store | null;
 };
 export type LoginResponseType = {
-  token: string;
-  username: string;
+  access_token: string;
+  email: string;
 };

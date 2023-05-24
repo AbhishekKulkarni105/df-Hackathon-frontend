@@ -7,15 +7,6 @@ import React from "react";
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 export default function LayOut() {
-  //   const name: any = useSelector(
-  //     (store: Store) => store.userSession.user?.username
-  //   );
-  //   const ROLE: any = useSelector((store: Store) => store.userSession.user?.role);
-  //   function randomColor(): any {
-  //     let hex = Math.floor(Math.random() * 0xffffff);
-  //     let color = "#" + hex.toString(16);
-  //     return color;
-  //   }
   return (
     <>
       <Layout>

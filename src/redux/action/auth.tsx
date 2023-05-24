@@ -2,10 +2,10 @@ import { LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT, SET_MESSAGE } from "./type";
 import { Dispatch } from "redux";
 import AuthService from "../../services/authService";
 
-export const login = (username: string, password: string) => (
+export const login = (email: string, password: string) => (
   dispatch: Dispatch
 ) => {
-  return AuthService.login(username, password).then(
+  return AuthService.login(email, password).then(
     (data) => {
       dispatch({
         type: LOGIN_SUCCESS,
