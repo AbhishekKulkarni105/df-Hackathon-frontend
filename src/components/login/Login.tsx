@@ -2,7 +2,7 @@ import React from "react";
 import { Form, Input, Button, Checkbox } from "antd";
 import loginp from "../../assests/image 293.png";
 import logo from "../../assests/image 289.png";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { ToastContainer, toast, Flip } from "react-toastify";
@@ -17,16 +17,16 @@ const Login: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  // const home = (data: any) => {
-  //   dispatch(login(username, password));
-  //   console.log(data);
-  //   navigate("/");
-  // };
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
+  const home = (data: any) => {
+    dispatch(login(username, password));
+    console.log(data);
+    navigate("/");
+  };
+  // const {
+  //   register,
+  //   handleSubmit,
+  //   formState: { errors },
+  // } = useForm();
 
   const logind = (data: any) => {
     let params = {
@@ -71,6 +71,53 @@ const Login: React.FC = () => {
       });
   };
 
+  const [loggedIn, setLoggedIn] = useState(false);
+
+  useEffect(() => {
+    // Check if user is already logged in
+    const isLoggedIn = checkLoggedIn();
+    setLoggedIn(isLoggedIn);
+  }, []);
+
+  const checkLoggedIn = () => {
+    // Implement your logic to check if user is already logged in
+    // For example, you can check if there's a stored token in local storage
+    const token = localStorage.getItem("token");
+    return !!token;
+  };
+
+  const handleLogin = async () => {
+    try {
+      // Make a POST request to your authentication API endpoint
+      const response = await fetch("http://localhost:8081/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        // Save the authentication token in local storage
+        localStorage.setItem("token", data.token);
+        console.log(data.token);
+        setLoggedIn(true);
+      } else {
+        // Handle login error
+        console.error("Login failed");
+      }
+    } catch (error) {
+      console.error("Error during login:", error);
+    }
+  };
+
+  const handleLogout = () => {
+    // Clear the authentication token from local storage
+    localStorage.removeItem("token");
+    setLoggedIn(false);
+  };
+
   return (
     <div className="login-page">
       <div className="login-box">
@@ -80,7 +127,7 @@ const Login: React.FC = () => {
         <Form
           name="login-form"
           initialValues={{ remember: true }}
-          onFinish={logind}
+          onFinish={home}
           //   onFinishFailed={onFinishFailed}
         >
           <img src={logo} />
@@ -92,8 +139,8 @@ const Login: React.FC = () => {
             <Input
               placeholder="Username"
               value={username}
-              // onChange={(e) => setUsername(e.target.value)}
-              {...register("username", { required: "Email is required!" })}
+              onChange={(e) => setUsername(e.target.value)}
+              // {...register("username", { required: "Email is required!" })}
             />
           </Form.Item>
 
@@ -104,10 +151,10 @@ const Login: React.FC = () => {
             <Input.Password
               placeholder="Password"
               value={password}
-              // onChange={(e) => setPassword(e.target.value)}
-              {...register("password", {
-                required: "Password is required!",
-              })}
+              onChange={(e) => setPassword(e.target.value)}
+              // {...register("password", {
+              //   required: "Password is required!",
+              // })}
             />
           </Form.Item>
 

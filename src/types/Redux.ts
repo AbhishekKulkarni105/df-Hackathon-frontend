@@ -8,9 +8,5 @@ export type UserSessionType = {
 };
 export type LoginResponseType = {
   token: string;
-  userid: string;
-  email: string;
   username: string;
-  role: string;
-  firsttimelogin: boolean;
 };
