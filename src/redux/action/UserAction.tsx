@@ -1,62 +1,34 @@
-import { ThunkAction, ThunkDispatch } from "redux-thunk";
-import { AnyAction } from "redux";
-import {
-  USER_LOGIN_SUCCESS,
-  USER_LOGIN_REQUEST,
-  USER_LOGOUT,
-  USER_LOGIN_FAIL,
-} from "../constants/userConstants";
-import { RootState } from "../store";
+import { Dispatch } from "redux";
+import axios from "axios";
 
-export const login = (
-  email: String,
-  password: String
-): ThunkAction<Promise<void>, RootState, unknown, AnyAction> => async (
-  dispatch: ThunkDispatch<RootState, unknown, AnyAction>
-): Promise<void> => {
-  try {
-    dispatch({
-      type: USER_LOGIN_REQUEST,
-    });
+// login action
+const login = (username: string, password: string) => {
+  return async (dispatch: Dispatch) => {
+    try {
+      // API call
+      const response = await axios.post("/api/login", { username, password });
 
-    const response = await fetch("http://localhost:8081/api/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify({
-        email,
-        password,
-      }),
-    });
+      // Store the access token in local storage
+      localStorage.setItem("accessToken", response.data.accessToken);
 
-    const data = await response.json();
-    const userData = { firstName: data.first_name, lastName: data.last_name };
-
-    dispatch({
-      type: USER_LOGIN_SUCCESS,
-      payload: userData,
-    });
-
-    localStorage.setItem("userInfo", JSON.stringify(userData));
-  } catch (error) {
-    dispatch({
-      type: USER_LOGIN_FAIL,
-      payload: console.log(error),
-    });
-  }
+      // Dispatch action to store authenticated user data in Redux store
+      dispatch({ type: "LOGIN_SUCCESS", payload: response.data.user });
+    } catch (error) {
+      // Dispatch action for login failure
+      dispatch({ type: "LOGIN_FAILURE", payload: error });
+    }
+  };
 };
 
-export const logout = (): ThunkAction<
-  void,
-  RootState,
-  unknown,
-  AnyAction
-> => async (dispatch: ThunkDispatch<RootState, unknown, AnyAction>) => {
-  localStorage.removeItem("userInfo");
-  dispatch({ type: USER_LOGOUT });
+// logout action
+const logout = () => {
+  // Clear the access token from local storage
+  localStorage.removeItem("accessToken");
 
-  await fetch("http://localhost:8081/api/logout", {
-    headers: { "Content-Type": "application/json" },
-    credentials: "include",
-  });
+  // Dispatch action to clear user data from Redux store
+  return { type: "LOGOUT" };
 };
+
+const UserActions = { login, logout };
+
+export default UserActions;

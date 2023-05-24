@@ -18,52 +18,58 @@ export default function LayOut() {
   //   }
   return (
     <>
-      <Layout style={{ minHeight: "100vh" }}>
-        <Layout className="site-layout" style={{ backgroundColor: "#ede9e9" }}>
-          <Header
+      <Layout>
+        <Header style={{ display: "flex", alignItems: "center" }}>
+          <div className="demo-logo">
+            <Image src={logo} height={63} width={175} preview={false} />
+          </div>
+          <div
             style={{
-              display: "flex",
-              alignItems: "center",
-              background: "#662671",
+              width: "100%",
+              position: "sticky",
+              left: "0",
+              top: "0",
+              right: "0",
+              zIndex: "1",
             }}
           >
-            <div className="demo-logo">
-              <Image src={logo} height={63} width={175} preview={false} />
-            </div>
-            {/* <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']}} /> */}
-            <div
+            <Avatar
+              size={45}
               style={{
-                width: "100%",
-                position: "sticky",
-                left: "0",
-                top: "0",
-                right: "0",
-                zIndex: "1",
+                float: "right",
+                marginTop: ".5rem",
+                color: "white",
+                cursor: "pointer",
+                // backgroundColor: colorBgContainer,
+              }}
+            ></Avatar>
+          </div>
+          {/* <Menu theme="dark" mode="horizontal" defaultSelectedKeys={["2"]} /> */}
+        </Header>
+
+        <Layout>
+          <Sider width={200} style={{}}>
+            <Menu
+              mode="inline"
+              defaultSelectedKeys={["1"]}
+              defaultOpenKeys={["sub1"]}
+              style={{ height: "100%", borderRight: 0 }}
+            >
+              {" "}
+              <AdminMenu />
+            </Menu>
+          </Sider>
+          <Layout style={{ padding: "0 24px 24px" }}>
+            <Content
+              style={{
+                padding: 24,
+                margin: 0,
+                minHeight: 280,
               }}
             >
-              <Avatar
-                size={45}
-                style={{
-                  float: "right",
-                  marginTop: ".5rem",
-                  color: "white",
-                  cursor: "pointer",
-                  // backgroundColor: colorBgContainer,
-                }}
-              ></Avatar>
-            </div>
-          </Header>
-          <AdminMenu />
-          <Content
-            style={{
-              margin: "0.8rem",
-              backgroundColor: "#ede9e9",
-              border: "0.1rem solid black",
-              borderRadius: "0.35rem",
-            }}
-          >
-            <AdminRoutes />
-          </Content>
+              <AdminRoutes />
+            </Content>
+          </Layout>
         </Layout>
       </Layout>
     </>
