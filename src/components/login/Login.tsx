@@ -7,30 +7,10 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { ToastContainer, toast, Flip } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
-import { useNavigate } from "react-router-dom";
-import { login } from "../../redux/action/auth";
-import { useForm } from "react-hook-form";
-import PropTypes from "prop-types";
-
-async function loginUser(credentials: any) {
-  return fetch("http://localhost:8081/api/auth/login", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(credentials),
-  }).then((data) => data.json());
-}
 
 export default function Login() {
-  const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  // const home = (data: any) => {
-  //   dispatch(login(email, password));
-  //   console.log(data);
-  // };
 
   const logind = (data: any) => {
     let params = {
