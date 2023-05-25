@@ -10,7 +10,13 @@ export default function LayOut() {
   return (
     <>
       <Layout>
-        <Header style={{ display: "flex", alignItems: "center" }}>
+        <Header
+          style={{
+            display: "flex",
+            alignItems: "center",
+            background: "#5E0095",
+          }}
+        >
           <div className="demo-logo">
             <Image src={logo} height={63} width={175} preview={false} />
           </div>
@@ -31,7 +37,7 @@ export default function LayOut() {
                 marginTop: ".5rem",
                 color: "white",
                 cursor: "pointer",
-                // backgroundColor: colorBgContainer,
+                background: "#F4F4F4",
               }}
             ></Avatar>
           </div>
@@ -53,9 +59,10 @@ export default function LayOut() {
           <Layout style={{ padding: "0 24px 24px" }}>
             <Content
               style={{
-                padding: 24,
-                margin: 0,
-                minHeight: 280,
+                margin: "0.8rem",
+                backgroundColor: "#ede9e9",
+                border: "0.1rem solid black",
+                borderRadius: "0.35rem",
               }}
             >
               <AdminRoutes />

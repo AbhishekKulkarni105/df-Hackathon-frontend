@@ -24,24 +24,33 @@ import { useNavigate } from "react-router-dom";
 
 const Createproducts: React.FC = () => {
   const [category, setCategory] = useState("");
-  const [pName, setProductName] = useState("");
-  const [pSize, setPackSize] = useState(""); 
-  const [pMrp, setMRP] = useState(""); 
+  const [productName, setProductName] = useState("");
+  const [packSize, setPackSize] = useState(""); 
+  const [productPrice, setMRP] = useState(""); 
   const [pImage, setProductImage] = useState("");
   const [pStatus, setStatus] = useState("");
   let navigate = useNavigate();
 
   const productData = () => {
-    axios
-      .post(`https://608a365f8c8043001757fd98.mockapi.io/user/Employee`, {
+    const access_token = localStorage.getItem("auth");
+    console.log("getting",access_token)
+   
+    const url = 'http://localhost:8081/api/product'
+    const data = {
       category, 
-      pName,
-      pSize,
-      pMrp,
+      productName,
+      packSize,
+      productPrice,
       pImage,
       pStatus
-      })
-      .then(() => {
+    }
+    axios.post(url, data, {
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+        "Access-Control-Allow-Origin": "*",
+        Authorization: `Bearer ${access_token}`,  
+      },
+    }).then(() => {
         navigate("/products");
       });
   };
@@ -101,7 +110,7 @@ const Createproducts: React.FC = () => {
               <Form.Item
                 className="formfiled"
                 label="Product Name"
-                name="pname"
+                name="productName"
                 rules={[
                   {
                     required: true,
@@ -121,7 +130,7 @@ const Createproducts: React.FC = () => {
               <Form.Item
                 className="formfiled"
                 label="Pack Size"
-                name="pSize"
+                name="packSize"
                 rules={[
                   {
                     required: true,
@@ -141,7 +150,7 @@ const Createproducts: React.FC = () => {
               <Form.Item
                 className="formfiled"
                 label="MRP"
-                name="pMrp"
+                name="productPrice"
                 rules={[
                   {
                     required: true,

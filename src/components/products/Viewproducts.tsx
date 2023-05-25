@@ -1,39 +1,50 @@
 import React from "react";
-import { Card, Button, Col, Table } from "antd";
+import { Button, Card, Col, Layout, Table, Tooltip } from "antd";
+import { EditOutlined } from "@ant-design/icons";
 import { Input, Space } from "antd";
 import { useNavigate } from "react-router-dom";
 const { Search } = Input;
-import axios from "axios";
 import { useEffect, useState } from "react";
 
 const columns = [
   {
     title: "ID",
-    dataIndex: "id",
+    dataIndex: "productId",
   },
   {
     title: "Category",
-    dataIndex: "category",
+    dataIndex: "CategoryCategoryId",
   },
   {
     title: "Product Name",
-    dataIndex: "pName",
+    dataIndex: "productName",
   },
   {
     title: "Pack Size",
-    dataIndex: "pSize",
+    dataIndex: "packSize",
   },
   {
     title: "MRP",
-    dataIndex: "pMrp",
+    dataIndex: "productPrice",
   },
   {
     title: "Product Image",
-    dataIndex: "pImage",
+    dataIndex: "productImage",
   },
   {
     title: "Status",
-    dataIndex: "pStatus",
+    dataIndex: "productStatus",
+  },
+  {
+    title: "Action",
+    key: "action",
+    render: (record: any) => (
+      <Space size="middle">
+        <Tooltip title="Edit Client Manager">
+          <EditOutlined style={{ fontSize: "22px", color: "skyblue" }} />
+        </Tooltip>
+      </Space>
+    ),
   },
 ];
 
@@ -41,34 +52,37 @@ const Viewproducts: React.FC = () => {
   let navigate = useNavigate();
 
   const [APIData, setAPIData] = useState([]);
+
   useEffect(() => {
-    axios
-      .get(`https://608a365f8c8043001757fd98.mockapi.io/user/Employee`)
-      .then((response) => {
-        console.log(response.data);
-        setAPIData(response.data);
-      });
+    const fetchData = async () => {
+      const access_token = localStorage.getItem("auth");
+      try {
+        const response = await fetch("http://localhost:8081/api/product", {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${access_token}`,
+          },
+        });
+
+        if (response.ok) {
+          // Successful response handling
+          const data = await response.json();
+          setAPIData(data.rows);
+          console.log("GETTTINGGGG!!!", data.rows);
+          console.log(data.rows);
+        } else {
+          // Handle error response
+          console.error("Error:", response.status);
+        }
+      } catch (error) {
+        // Handle network error
+        console.error("Error:", error);
+      }
+    };
+
+    fetchData();
   }, []);
 
-  const setData = (data: any) => {
-    let { id, pname, category, pSize, pMrp, pImage, status } = data;
-    localStorage.setItem("ID", id);
-    localStorage.setItem("Category", category);
-    localStorage.setItem("Product Name", pname);
-    localStorage.setItem("Pack Size", pSize);
-    localStorage.setItem("MRP", pMrp);
-    localStorage.setItem("Product Image", pImage);
-    localStorage.setItem("Status", status);
-  };
-
-  const getData = () => {
-    axios
-      .get(`https://60fbca4591156a0017b4c8a7.mockapi.io/fakeData`)
-      .then((getData) => {
-        setAPIData(getData.data);
-        console.log("getting!!!", getData);
-      });
-  };
   return (
     <>
       <Card title="" bordered={true} style={{ paddingBottom: "6rem" }}>
@@ -87,11 +101,7 @@ const Viewproducts: React.FC = () => {
             style={{ marginLeft: "1.7rem", marginTop: ".7rem" }}
           >
             <Space>
-              <Search
-                placeholder="Search"
-                enterButton
-                //   onChange={(e: any) => setName(e.target.value)}
-              />
+              <Search placeholder="Search" enterButton />
 
               <Button
                 type="primary"

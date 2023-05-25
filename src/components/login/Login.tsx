@@ -5,12 +5,16 @@ import logo from "../../assests/image 289.png";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
+import { Route, Routes } from "react-router-dom";
 import { ToastContainer, toast, Flip } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
+import { Link, useNavigate } from "react-router-dom";
 
-export default function Login() {
+export default function Login(props: any) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { forgot } = props;
+  let navigate = useNavigate();
 
   const logind = (data: any) => {
     let params = {
@@ -77,8 +81,6 @@ export default function Login() {
               placeholder="Username"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-
-              // {...register("username", { required: "Email is required!" })}
             />
           </Form.Item>
 
@@ -96,10 +98,16 @@ export default function Login() {
           <Form.Item name="remember" valuePropName="checked">
             <Checkbox>Remember me</Checkbox>
           </Form.Item>
-          <a className="login-form-forgot" href="">
-            Forgot password
-          </a>
+
           <Form.Item>
+            <Link
+              to="/"
+              onClick={forgot}
+              style={{ color: "rgb(118, 116, 247)", borderRadius: ".35rem" }}
+            >
+              Forgot Password
+            </Link>
+
             <Button
               type="primary"
               htmlType="submit"

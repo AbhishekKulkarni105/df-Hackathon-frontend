@@ -1,6 +1,6 @@
 import React from "react";
-import { Button, Card, Col, Layout, Table } from "antd";
-
+import { Button, Card, Col, Layout, Table, Tooltip } from "antd";
+import { DoubleLeftOutlined, EditOutlined } from "@ant-design/icons";
 const { Search } = Input;
 import { Input, Space } from "antd";
 import { UserOutlined } from "@ant-design/icons";
@@ -10,60 +10,67 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-const columns = [
+const columns: any = [
   {
     title: "ID",
-    dataIndex: "id",
+    dataIndex: "categoryId",
   },
   {
     title: "Category Name",
-    dataIndex: "cName",
+    dataIndex: "categoryName",
   },
   {
     title: "Description",
-    dataIndex: "description",
+    dataIndex: "categoryDescription",
   },
   {
     title: "Status",
-    dataIndex: "status",
+    dataIndex: "categoryStatus",
+  },
+  {
+    title: "Action",
+    key: "action",
+    render: (record: any) => (
+      <Space size="middle">
+        <Tooltip title="Edit Client Manager">
+          <EditOutlined style={{ fontSize: "22px", color: "skyblue" }} />
+        </Tooltip>
+      </Space>
+    ),
   },
 ];
 const Viewcategory: React.FC = () => {
   let navigate = useNavigate();
   const [APIData, setAPIData] = useState([]);
   useEffect(() => {
-    axios
-      .get(`https://60fbca4591156a0017b4c8a7.mockapi.io/fakeData`)
-      .then((response) => {
-        console.log(response.data);
-        setAPIData(response.data);
-      });
+    const fetchData = async () => {
+      const access_token = localStorage.getItem("auth");
+      try {
+        const response = await fetch("http://localhost:8081/api/category", {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${access_token}`,
+          },
+        });
+
+        if (response.ok) {
+          // Successful response handling
+          const data = await response.json();
+          setAPIData(data.rows);
+          console.log("GETTTINGGGG!!!", data.rows);
+          console.log(data.rows);
+        } else {
+          // Handle error response
+          console.error("Error:", response.status);
+        }
+      } catch (error) {
+        // Handle network error
+        console.error("Error:", error);
+      }
+    };
+
+    fetchData();
   }, []);
-
-  const setData = (data: any) => {
-    let { id, cName, description, status } = data;
-    localStorage.setItem("ID", id);
-    localStorage.setItem("Category Name", cName);
-    localStorage.setItem("Description", description);
-    localStorage.setItem("Status", status);
-  };
-
-  const getData = () => {
-    axios
-      .get(`https://60fbca4591156a0017b4c8a7.mockapi.io/fakeData`)
-      .then((getData) => {
-        setAPIData(getData.data);
-        console.log("getting!!!", getData);
-      });
-  };
-
-  const onDelete = (id: any) => {
-    axios
-      .delete(`https://60fbca4591156a0017b4c8a7.mockapi.io/fakeData/${id}`)
-      .then(() => {
-        getData();
-      });
-  };
   return (
     <>
       <Layout style={{ padding: "0 24px 24px" }}>

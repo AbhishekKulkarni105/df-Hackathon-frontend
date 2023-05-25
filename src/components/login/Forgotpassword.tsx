@@ -2,7 +2,8 @@ import React from "react";
 import { Form, Input, Button, Checkbox } from "antd";
 
 import logo from "../assests/image 289.png";
-export default function Forgot() {
+export default function Forgot(props: any) {
+  const { toggle } = props;
   //   const onFinish = (values) => {
   //     console.log("Success:", values);
   //   };

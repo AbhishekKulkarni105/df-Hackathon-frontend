@@ -9,17 +9,28 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const Createcategory: React.FC = () => {
-  const [cName, setCategoryName] = useState("");
-  const [description, setDescription] = useState("");
-  const [status, setStatus] = useState("");
+  const [categoryName, setCategoryName] = useState("");
+  const [categoryDescription, setDescription] = useState("");
+  const [categoryStatus, setStatus] = useState("");
   let navigate = useNavigate();
 
   const postData = () => {
+    const access_token = localStorage.getItem("auth");
+    console.log("getting", access_token);
+
+    const url = "http://localhost:8081/api/category";
+    const data = {
+      categoryName,
+      categoryDescription,
+      categoryStatus,
+    };
     axios
-      .post(`https://60fbca4591156a0017b4c8a7.mockapi.io/fakeData`, {
-        cName,
-        description,
-        status,
+      .post(url, data, {
+        headers: {
+          "Content-Type": "application/json;charset=UTF-8",
+          "Access-Control-Allow-Origin": "*",
+          Authorization: `Bearer ${access_token}`,
+        },
       })
       .then(() => {
         navigate("/category");
